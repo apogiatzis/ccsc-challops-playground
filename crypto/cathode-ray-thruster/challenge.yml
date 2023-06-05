@@ -12,6 +12,10 @@ extra:
   minimum: 100
   decay: 50
 
+  docker_image: ghcr.io/apogiatzis/ccsc-2022/cathode-ray-thruster:main
+  redirect_port: 9000
+  redirect_type: direct
+
 flags:
   - CCSC{Zeep_zo0o0op_f4ulTy_3ncRypT1on!!!}
 
