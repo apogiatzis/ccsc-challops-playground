@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - context: crypto/cathode-ray-thruster
-            dockerfile: crypto/cathode-ray-thruster/setup/Dockerfile
+          - context: crypto/cathode-ray-thruster/setup
+            # dockerfile: crypto/cathode-ray-thruster/setup/Dockerfile
             image: ghcr.io/apogiatzis/ccsc-2022/cathode-ray-thruster
     permissions:
       contents: read
