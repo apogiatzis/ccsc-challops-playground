@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
           - context: crypto/cathode-ray-thruster
-            dockerfile: setup/Dockerfile
+            dockerfile: crypto/cathode-ray-thruster/setup/Dockerfile
             image: ghcr.io/apogiatzis/ccsc-2022/cathode-ray-thruster
     permissions:
       contents: read
