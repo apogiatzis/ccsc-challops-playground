@@ -16,7 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./crypto/cathode-ray-thruster/Dockerfile
+          - context: crypto/cathode-ray-thruster
+            dockerfile: setup/Dockerfile
             image: ghcr.io/apogiatzis/ccsc-2022/cathode-ray-thruster
     permissions:
       contents: read
@@ -42,6 +43,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
+          context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
