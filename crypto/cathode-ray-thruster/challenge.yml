@@ -1,0 +1,27 @@
+name: "Cathode Ray Thruster "
+author: "rok0s"
+category: crypto
+
+description: |
+  Hey, Morty! Are you ready for an adventure? \*burp\*. We gotta jump into the microverse and teach that arrogant Zeep a lesson! This Cathode Ray Thruster is gonna make all their motherboards go faulty ... \*burp\*
+
+value: 500
+type: dynamic
+extra:
+  initial: 500
+  minimum: 100
+  decay: 50
+
+flags:
+  - CCSC{Zeep_zo0o0op_f4ulTy_3ncRypT1on!!!}
+
+tags:
+  - crypto
+  - rsa
+  - crt
+
+files:
+  - "public/public-key.pem"
+
+state: visible
+version: "0.1"

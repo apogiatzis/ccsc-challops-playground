@@ -1,0 +1,26 @@
+name: "Supersingular Finite Curve"
+author: "rok0s"
+category: crypto
+
+description: |
+  In response to the Central Finite Curve, evil Morty is forming the Supersingular Finite Curve. This is a portion of the multiverse, where Mortys dominate over Ricks. Not sure if Morty's smart enough to complete this.. his maths may be out of order...
+
+value: 500
+type: dynamic
+extra:
+  initial: 500
+  minimum: 100
+  decay: 50
+
+flags:
+  - CCSC{3v1l_M0rTy_m1sS3d_th3_eMb3d1ng_d3gree!!}
+
+tags:
+  - crypto
+  - elliptic curves
+
+files:
+  - "public/challenge.txt"
+
+state: visible
+version: "0.1"
