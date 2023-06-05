@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build challenge Docker image
-      run: ./crypto/cathode-ray-thruster/docker-build.sh
+      run: cd crypto/cathode-ray-thruster/ && ./docker-build.sh
