@@ -62,7 +62,9 @@ jobs:
         id: modified-chalenges
         run: |
           COMMIT_MESSAGE=$(git log --format=%B -n 1)
+          echo $COMMIT_MESSAGE
           if [[ "$COMMIT_MESSAGE" == *"[no-cache]"* ]]; then
+            echo "Invalidating cache..."
             rm -f .cache/last_hashes
           fi
           touch .cache/last_hashes
@@ -77,16 +79,16 @@ jobs:
       - name: Changed challenges list
         run: echo "${{ steps.modified-chalenges.outputs.dirs }}"
           
-      - name: Build challenges
-        run: |
-          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
-          for challenge_dir in "${challenge_dirs[@]}"; do
-            docker compose -f $challenge_dir/docker-compose.yml build
-          done
+      # - name: Build challenges
+      #   run: |
+      #     IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
+      #     for challenge_dir in "${challenge_dirs[@]}"; do
+      #       docker compose -f $challenge_dir/docker-compose.yml build
+      #     done
       
-      - name: Push challenges
-        run: |
-          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
-          for challenge_dir in "${challenge_dirs[@]}"; do
-            docker compose -f $challenge_dir/docker-compose.yml push
-          done
+      # - name: Push challenges
+      #   run: |
+      #     IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
+      #     for challenge_dir in "${challenge_dirs[@]}"; do
+      #       docker compose -f $challenge_dir/docker-compose.yml push
+      #     done
