@@ -56,15 +56,19 @@ jobs:
       - name: Output directories
         run: |
           echo "${{ steps.discover.outputs.dirs }}"
-      
+
       - name: Check changed directories
         id: changed-challenge-dirs
         run: |
           changed_dirs=()
+          IFS=' ' read -r -a changed_files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
           for dir in $dirs; do
-            if [[ " ${CHANGED_FILES[@]} " =~ " ${dir} " ]]; then
-              changed_dirs+=("$dir")
-            fi
+            for file in "${changed_files[@]}"; do
+              if [[ "$file" == "$dir"* ]]; then
+                changed_dirs+=("$dir")
+                break
+              fi
+            done
           done
           echo "changed_dirs=${changed_dirs[*]}" >> "$GITHUB_OUTPUT"
 
