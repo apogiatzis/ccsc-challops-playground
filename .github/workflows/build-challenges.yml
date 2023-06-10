@@ -1,97 +1,97 @@
 
-name: Create and publish a Docker image
+# name: Create and publish a Docker image
 
-on:
-  push:
-    branches: ['main']
+# on:
+#   push:
+#     branches: ['main']
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+# env:
+#   REGISTRY: ghcr.io
+#   IMAGE_NAME: ${{ github.repository }}
 
-jobs:
-  build-and-push-image:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - context: crypto/cathode-ray-thruster/setup
-            # dockerfile: crypto/cathode-ray-thruster/setup/Dockerfile
-            image: ghcr.io/apogiatzis/ccsc-2022/cathode-ray-thruster
-    permissions:
-      contents: read
-      packages: write
+# jobs:
+#   build-and-push-image:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         include:
+#           - context: crypto/cathode-ray-thruster/setup
+#             # dockerfile: crypto/cathode-ray-thruster/setup/Dockerfile
+#             image: ghcr.io/apogiatzis/ccsc-2022/cathode-ray-thruster
+#     permissions:
+#       contents: read
+#       packages: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Log in to the Container registry
+#         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+#         with:
+#           registry: ${{ env.REGISTRY }}
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v36
+#       - name: Get changed files
+#         id: changed-files
+#         uses: tj-actions/changed-files@v36
 
-      - name: Find challenge directories
-        id: discover
-        run: |
-          dirs=()
-          while IFS=  read -r -d $'\0'; do
-            dirs+=("$REPLY")
-          done < <(find . -type d \( -exec test -e '{}/challenge.yml' \; -a -exec test -e '{}/docker-compose.yml' \; -print0 \))
-          echo "dirs=${dirs[*]}" >> "$GITHUB_OUTPUT"
+#       - name: Find challenge directories
+#         id: discover
+#         run: |
+#           dirs=()
+#           while IFS=  read -r -d $'\0'; do
+#             dirs+=("$REPLY")
+#           done < <(find . -type d \( -exec test -e '{}/challenge.yml' \; -a -exec test -e '{}/docker-compose.yml' \; -print0 \))
+#           echo "dirs=${dirs[*]}" >> "$GITHUB_OUTPUT"
 
-      - name: Check changed challenged directories
-        id: changed-challenge-dirs
-        run: |
-          changed_dirs=()
-          IFS=' ' read -r -a changed_files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
-          IFS=' ' read -r -a dirs <<< "${{ steps.discover.outputs.dirs }}"
-          for dir in "${dirs[@]}"; do
-            for file in "${changed_files[@]}"; do
-              if [[ "./$file" == "$dir"* ]]; then
-                changed_dirs+=("$dir")
-                break
-              fi
-            done
-          done
-          echo "changed_dirs=${changed_dirs[*]}" >> "$GITHUB_OUTPUT"
+#       - name: Check changed challenged directories
+#         id: changed-challenge-dirs
+#         run: |
+#           changed_dirs=()
+#           IFS=' ' read -r -a changed_files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+#           IFS=' ' read -r -a dirs <<< "${{ steps.discover.outputs.dirs }}"
+#           for dir in "${dirs[@]}"; do
+#             for file in "${changed_files[@]}"; do
+#               if [[ "./$file" == "$dir"* ]]; then
+#                 changed_dirs+=("$dir")
+#                 break
+#               fi
+#             done
+#           done
+#           echo "changed_dirs=${changed_dirs[*]}" >> "$GITHUB_OUTPUT"
 
-      - name: Output changed directories
-        run: |
-          echo "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
+#       - name: Output changed directories
+#         run: |
+#           echo "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
 
-      - name: Build docker images
-        run: |
-          IFS=' ' read -r -a changed_dirs <<< "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
-          for chall_dir in "${changed_dirs[@]}"; do
-            docker-compose -f ${chall_dir}/docker-compose.yml build
-          done
+#       - name: Build docker images
+#         run: |
+#           IFS=' ' read -r -a changed_dirs <<< "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
+#           for chall_dir in "${changed_dirs[@]}"; do
+#             docker-compose -f ${chall_dir}/docker-compose.yml build
+#           done
 
-      - name: Push docker images
-        run: |
-          IFS=' ' read -r -a changed_dirs <<< "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
-          for chall_dir in "${changed_dirs[@]}"; do
-            docker-compose -f ${chall_dir}/docker-compose.yml push
-          done
+#       - name: Push docker images
+#         run: |
+#           IFS=' ' read -r -a changed_dirs <<< "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
+#           for chall_dir in "${changed_dirs[@]}"; do
+#             docker-compose -f ${chall_dir}/docker-compose.yml push
+#           done
 
-      # - name: Extract metadata (tags, labels) for Docker
-      #   id: meta
-      #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-      #   with:
-      #     images:  ${{ matrix.image }}
+#       # - name: Extract metadata (tags, labels) for Docker
+#       #   id: meta
+#       #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+#       #   with:
+#       #     images:  ${{ matrix.image }}
 
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-      #   with:
-      #     context: ${{ matrix.context }}
-      #     file: ${{ matrix.dockerfile }}
-      #     push: true
-      #     tags: ${{ steps.meta.outputs.tags }}
-      #     labels: ${{ steps.meta.outputs.labels }}
+#       # - name: Build and push Docker image
+#       #   uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+#       #   with:
+#       #     context: ${{ matrix.context }}
+#       #     file: ${{ matrix.dockerfile }}
+#       #     push: true
+#       #     tags: ${{ steps.meta.outputs.tags }}
+#       #     labels: ${{ steps.meta.outputs.labels }}

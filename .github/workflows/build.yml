@@ -33,17 +33,30 @@ jobs:
 
       - name: Docker challenges list
         run: echo "${{ steps.docker-chall-discovery.outputs.dirs }}"
-      
-      - name: Build challenges
+
+      - name: Create folder challenge hashes
+        id: challenge-hashes
         run: |
           IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
           for challenge_dir in "${challenge_dirs[@]}"; do
-            docker compose -f $challenge_dir/docker-compose.yml build
+            hash=$(find $challenge_dir -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum)
+            hashes+=("${hash}")
           done
+          echo "hashes=${hashes[*]}" >> "$GITHUB_OUTPUT"
       
-      - name: Push challenges
-        run: |
-          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
-          for challenge_dir in "${challenge_dirs[@]}"; do
-            docker compose -f $challenge_dir/docker-compose.yml push
-          done
+      - name: Docker challenges list
+        run: echo "${{ steps.challenge-hashes.outputs.hashes }}"
+      
+      # - name: Build challenges
+      #   run: |
+      #     IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
+      #     for challenge_dir in "${challenge_dirs[@]}"; do
+      #       docker compose -f $challenge_dir/docker-compose.yml build
+      #     done
+      
+      # - name: Push challenges
+      #   run: |
+      #     IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
+      #     for challenge_dir in "${challenge_dirs[@]}"; do
+      #       docker compose -f $challenge_dir/docker-compose.yml push
+      #     done
