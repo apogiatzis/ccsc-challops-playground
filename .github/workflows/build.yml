@@ -61,7 +61,6 @@ jobs:
           cat .cache/last_hashes
       
       - name: Find modified challenges
-        if: steps.challenges-hashes-cache.outputs.cache-hit != 'true'
         id: modified-chalenges
         run: |
           touch .cache/last_hashes
