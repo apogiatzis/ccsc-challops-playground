@@ -37,14 +37,8 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v36
-      
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
 
-      - name: Find Directories
+      - name: Find challenge directories
         id: discover
         run: |
           dirs=()
@@ -52,12 +46,8 @@ jobs:
             dirs+=("$REPLY")
           done < <(find . -type d \( -exec test -e '{}/challenge.yml' \; -a -exec test -e '{}/docker-compose.yml' \; -print0 \))
           echo "dirs=${dirs[*]}" >> "$GITHUB_OUTPUT"
-          
-      - name: Output directories
-        run: |
-          echo "${{ steps.discover.outputs.dirs }}"
 
-      - name: Check changed directories
+      - name: Check changed challenged directories
         id: changed-challenge-dirs
         run: |
           changed_dirs=()
@@ -77,17 +67,24 @@ jobs:
         run: |
           echo "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images:  ${{ matrix.image }}
+      - name: Build docker images
+        run: |
+          IFS=' ' read -r -a changed_dirs <<< "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
+          for chall_dir in "${changed_dirs[@]}"; do
+            docker-compose -f ${chall_dir}/docker-compose.yml build
+          done
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-        with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.dockerfile }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      # - name: Extract metadata (tags, labels) for Docker
+      #   id: meta
+      #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      #   with:
+      #     images:  ${{ matrix.image }}
+
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      #   with:
+      #     context: ${{ matrix.context }}
+      #     file: ${{ matrix.dockerfile }}
+      #     push: true
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
