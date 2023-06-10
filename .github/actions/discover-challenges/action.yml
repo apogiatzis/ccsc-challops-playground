@@ -20,4 +20,5 @@ runs:
       run: |
         dirs=$(find . -name 'challenge.yml' -printf '%h\n' | sort -u)
         echo dirs="${dirs//$'\n'/ }" >> "$GITHUB_OUTPUT"
+      shell: bash
    
