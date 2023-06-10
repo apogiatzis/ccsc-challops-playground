@@ -20,3 +20,4 @@ See [solve.py](solution/solve.py) for a working exploit.
 EDIT: Or... just send the encrypted flag to be signed, and the script will gladly return the decryption for you since I was lazy enough to not hash the message to be signed xD xD. Thanks to @canopus for pointing this unintended solution. And kudos to everyone that solved the challenge in either way. 
 
 </details>
+

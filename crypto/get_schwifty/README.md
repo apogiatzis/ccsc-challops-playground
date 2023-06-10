@@ -20,3 +20,4 @@ N/A
 A solution that performs the above is provided in [sol.py](./sol/decrypt.py)
 
 </details>
+
