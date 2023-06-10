@@ -1,0 +1,38 @@
+version: "3.5"
+services:
+
+  portalsvc:
+    image: ccsc-2022/portal-gun-validation:latest
+    build: 
+      context: ./portal-svc
+      dockerfile: Dockerfile
+    restart: always
+
+  validationsvc:
+    image: ccsc-2022/portal-gun-core:latest
+    build: 
+      context: ./validation-svc
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8082:3000
+    links:
+      - portalsvc
+
+  portaldb:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./.mongodb/:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_DATA_DIR=/data/db
+
+  mongo-seed:
+    image: ccsc-2022/mongo-seed:latest
+    build: 
+      context: ./mongo-seed
+      dockerfile: Dockerfile
+    links:
+      - portaldb

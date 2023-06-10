@@ -12,6 +12,7 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
     needs: lint
-  
 
-
+  ctfd:
+    uses: ./.github/workflows/ctfd.yml
+    needs: build
