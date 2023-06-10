@@ -62,6 +62,7 @@ jobs:
         run: |
           changed_dirs=()
           IFS=' ' read -r -a changed_files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+          IFS=' ' read -r -a dirs <<< "${{ steps.discover.outputs.dirs }}"
           for dir in "${dirs[@]}"; do
             for file in "${changed_files[@]}"; do
               if [[ "./$file" == "$dir"* ]]; then
