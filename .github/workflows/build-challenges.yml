@@ -52,17 +52,19 @@ jobs:
       
       - name: Find Directories
         id: discover
+        outputs:
+          challenge_dirs: ${{ steps.discover.outputs.dirs }}
         run: |
           dirs=()
           while IFS=  read -r -d $'\0'; do
             dirs+=("$REPLY")
           done < <(find . -type d \( -exec test -e '{}/challenge.yml' \; -a -exec test -e '{}/docker-compose.yml' \; -print0 \))
-          echo "dirs=${dirs[*]}"      
-          echo "::set-output name=dirs::${dirs[*]}"
+          echo "dirs=${dirs[*]}" >> "$GITHUB_OUTPUT"
+          
 
       - name: Output directories
         run: |
-          echo "${{ steps.discover.outputs.dirs }}"
+          echo "${{ steps.discover.outputs.challenge_dirs }}"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
