@@ -15,7 +15,7 @@ jobs:
           pip install git+https://github.com/apogiatzis/ctfcli
 
       - id: challenge-discovery
-        uses: ./.github/actions/discover-challenges.yml
+        uses: ./.github/actions/discover-challenges
         with:
           base-dir: '.'
 
