@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  challenge:
+    image: ghcr.io/apogiatzis/ccsc-2022/anatomy-park:latest
+    restart: always
+    ports:
+      - 13373:13373
+    build:
+      context: ./setup
+      dockerfile: Dockerfile
+
