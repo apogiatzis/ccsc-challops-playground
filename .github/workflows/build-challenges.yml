@@ -43,13 +43,7 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
-      
-      - name: Run step if any file(s)  change
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          echo "One or more files in the docs folder has changed."
-          echo "List all the files that have changed: ${{ steps.changed-files.outputs.all_changed_files }}"
-      
+
       - name: Find Directories
         id: discover
         run: |
@@ -59,10 +53,24 @@ jobs:
           done < <(find . -type d \( -exec test -e '{}/challenge.yml' \; -a -exec test -e '{}/docker-compose.yml' \; -print0 \))
           echo "dirs=${dirs[*]}" >> "$GITHUB_OUTPUT"
           
-
       - name: Output directories
         run: |
           echo "${{ steps.discover.outputs.dirs }}"
+      
+      - name: Check changed directories
+        id: changed-challenge-dirs
+        run: |
+          changed_dirs=()
+          for dir in $dirs; do
+            if [[ " ${CHANGED_FILES[@]} " =~ " ${dir} " ]]; then
+              changed_dirs+=("$dir")
+            fi
+          done
+          echo "changed_dirs=${changed_dirs[*]}" >> "$GITHUB_OUTPUT"
+
+      - name: Output changed directories
+        run: |
+          echo "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
