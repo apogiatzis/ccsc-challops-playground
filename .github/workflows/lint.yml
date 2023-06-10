@@ -20,7 +20,7 @@ jobs:
         with:
           base-dir: '.'
 
-      - name: Show output
+      - name: Challenge list
         run: echo "${{ steps.challenge-discovery.outputs.dirs }}"
 
       - name: Lint challenges

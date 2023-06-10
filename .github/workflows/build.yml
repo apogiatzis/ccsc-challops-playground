@@ -23,13 +23,27 @@ jobs:
       - name: Docker challenge discovery
         id: docker-chall-discovery
         run: |
-          IFS=' ' read -r -a dirs <<< "${{ steps.challenge-discovery.outputs.dirs }}"
-          for dir in "${dirs[@]}"; do
-              if [[ -f "${dir}/docker-compose.yaml" ]]; then
-                  docker_chall_dirs+=("${dir}")
+          IFS=' ' read -r -a chall_dirs <<< "${{ steps.challenge-discovery.outputs.dirs }}"
+          for dir in "${chall_dirs[@]}"; do
+              if [[ -f "${dir}/docker-compose.yml" ]]; then
+                  dirs+=("${dir}")
               fi
           done
-          echo "docker_chall_dirs=${docker_chall_dirs[*]}" >> "$GITHUB_OUTPUT"
+          echo "dirs=${dirs[*]}" >> "$GITHUB_OUTPUT"
 
-      - name: Show output
-        run: echo "${{ steps.docker-chall-discovery.outputs.docker_chall_dirs }}"
+      - name: Docker challenges list
+        run: echo "${{ steps.docker-chall-discovery.outputs.dirs }}"
+      
+      - name: Build challenges
+        run: |
+          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
+          for challenge_dir in "${challenge_dirs[@]}"; do
+            docker compose -f $challenge_dir/docker-compose.yml build
+          done
+      
+      - name: Push challenges
+        run: |
+          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
+          for challenge_dir in "${challenge_dirs[@]}"; do
+            docker compose -f $challenge_dir/docker-compose.yml push
+          done
