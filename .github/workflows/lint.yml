@@ -22,7 +22,7 @@ jobs:
       
       - name: Challenge discovery
         id: challenge-discovery
-        uses: .github/actions/discover-challenges
+        uses: ./.github/actions/discover-challenges
         with:
           base-dir: '.'
 
