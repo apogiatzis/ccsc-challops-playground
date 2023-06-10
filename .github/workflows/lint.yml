@@ -19,9 +19,18 @@ jobs:
         run: |
           dirs=$(find . -name 'challenge.yml' -printf '%h\n' | sort -u)
           echo dirs="${dirs//$'\n'/ }" >> "$GITHUB_OUTPUT"
+      
+      - id: challenge-discovery
+        uses: .github/actions/discover-challenges
+        with:
+          base-dir: '.'
 
       - name: Show output
         run: echo "${{ steps.find-challenge-dirs.outputs.dirs }}"
+      
+      - name: Action output
+        run: echo ${{ steps.challenge-discovery.outputs.dirs }}
+        shell: bash
 
       - name: Lint challenges
         run: |
