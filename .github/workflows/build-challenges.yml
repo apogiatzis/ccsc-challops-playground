@@ -74,6 +74,13 @@ jobs:
             docker-compose -f ${chall_dir}/docker-compose.yml build
           done
 
+      - name: Push docker images
+        run: |
+          IFS=' ' read -r -a changed_dirs <<< "${{ steps.changed-challenge-dirs.outputs.changed_dirs }}"
+          for chall_dir in "${changed_dirs[@]}"; do
+            docker-compose -f ${chall_dir}/docker-compose.yml push
+          done
+
       # - name: Extract metadata (tags, labels) for Docker
       #   id: meta
       #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
