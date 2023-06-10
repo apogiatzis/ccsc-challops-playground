@@ -1,0 +1,14 @@
+name: Challenge Pipeline
+
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+

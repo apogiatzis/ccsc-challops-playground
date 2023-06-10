@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  challenge:
+    image: ghcr.io/apogiatzis/ccsc-2022/get_schwifty setup:latest
+    restart: always
+    ports:
+      - 13373:3137
+    build:
+      context: ./setup
+      dockerfile: Dockerfile
+

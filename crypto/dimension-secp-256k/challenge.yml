@@ -1,0 +1,25 @@
+name: "Dimension SECP-256K1"
+author: "rok0s"
+category: crypto
+
+description: |
+  Do you see this, Morty? It all looks normal in this dimension but watch out! Weird things can happen if you are not careful... 
+
+value: 500
+type: dynamic
+extra:
+  initial: 500
+  minimum: 100
+  decay: 50
+
+flags:
+  - CCSC{Zeep_zo0o0op_f4ulTy_3ncRypT1on!!!}
+
+tags:
+  - crypto
+
+files:
+  - "public/address.txt"
+
+state: visible
+version: "0.1"
