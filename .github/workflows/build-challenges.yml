@@ -49,6 +49,20 @@ jobs:
         run: |
           echo "One or more files in the docs folder has changed."
           echo "List all the files that have changed: ${{ steps.changed-files.outputs.all_changed_files }}"
+      
+      - name: Find Directories
+        id: discover
+        run: |
+          dirs=()
+          while IFS=  read -r -d $'\0'; do
+            dirs+=("$REPLY")
+          done < <(find . -type d \( -exec test -e '{}/challenge.yml' \; -a -exec test -e '{}/docker-compose.yml' \; -print0 \))
+          echo "dirs=${dirs[*]}"      
+          echo "::set-output name=dirs::${dirs[*]}"
+
+      - name: Output directories
+        run: |
+          echo "${{ steps.discover.outputs.dirs }}"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
