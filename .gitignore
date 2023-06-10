@@ -1,3 +1,4 @@
 .ctf
 .env
 .ipynb_checkpoints
+.cache
