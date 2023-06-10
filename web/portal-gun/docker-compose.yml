@@ -4,14 +4,14 @@ services:
   portalsvc:
     image: ccsc-2022/portal-gun-validation:latest
     build: 
-      context: ./portal-svc
+      context: ./setup/portal-svc
       dockerfile: Dockerfile
     restart: always
 
   validationsvc:
     image: ccsc-2022/portal-gun-core:latest
     build: 
-      context: ./validation-svc
+      context: ./setup/validation-svc
       dockerfile: Dockerfile
     restart: always
     ports:
@@ -32,7 +32,7 @@ services:
   mongo-seed:
     image: ccsc-2022/mongo-seed:latest
     build: 
-      context: ./mongo-seed
+      context: ./setup/mongo-seed
       dockerfile: Dockerfile
     links:
       - portaldb
