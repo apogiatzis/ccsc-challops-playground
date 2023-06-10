@@ -76,17 +76,24 @@ jobs:
       
       - name: Changed challenges list
         run: echo "${{ steps.modified-chalenges.outputs.dirs }}"
-          
-      # - name: Build challenges
-      #   run: |
-      #     IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
-      #     for challenge_dir in "${challenge_dirs[@]}"; do
-      #       docker compose -f $challenge_dir/docker-compose.yml build
-      #     done
       
-      # - name: Push challenges
-      #   run: |
-      #     IFS=' ' read -r -a challenge_dirs <<< "${{ steps.docker-chall-discovery.outputs.dirs }}"
-      #     for challenge_dir in "${challenge_dirs[@]}"; do
-      #       docker compose -f $challenge_dir/docker-compose.yml push
-      #     done
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Build challenges
+        run: |
+          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.modified-chalenges.outputs.dirs }}"
+          for challenge_dir in "${challenge_dirs[@]}"; do
+            docker compose -f $challenge_dir/docker-compose.yml build
+          done
+      
+      - name: Push challenges
+        run: |
+          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.modified-chalenges.outputs.dirs }}"
+          for challenge_dir in "${challenge_dirs[@]}"; do
+            docker compose -f $challenge_dir/docker-compose.yml push
+          done
