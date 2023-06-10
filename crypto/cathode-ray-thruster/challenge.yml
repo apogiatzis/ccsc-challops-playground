@@ -6,7 +6,7 @@ description: |
   Hey, Morty! Are you ready for an adventure? \*burp\*. We gotta jump into the microverse and teach that arrogant Zeep a lesson! This Cathode Ray Thruster is gonna make all their motherboards go faulty ... \*burp\*
 
 value: 500
-type: dynamic
+type: dynamic_docker
 extra:
   initial: 500
   minimum: 100
@@ -15,6 +15,8 @@ extra:
   docker_image: ghcr.io/apogiatzis/ccsc-2022/cathode-ray-thruster:main
   redirect_port: 9000
   redirect_type: direct
+
+  compose_stack: !filecontents docker-compose.yml
 
 flags:
   - CCSC{Zeep_zo0o0op_f4ulTy_3ncRypT1on!!!}

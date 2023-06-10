@@ -1,0 +1,11 @@
+version: "3.5"
+
+services:
+  challenge:
+    image: ccsc-2022/cathode-ray-thruster:latest
+    restart: always
+    ports:
+      - 31337:9000
+    build:
+      context: ./setup
+      dockerfile: Dockerfile
