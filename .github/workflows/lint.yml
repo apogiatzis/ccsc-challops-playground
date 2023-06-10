@@ -3,9 +3,12 @@ name: Lint Challenges
 on: [workflow_call]  # allow this workflow to be called from other workflows
 
 jobs:
-  lint:
+  run:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
       - name: Find directories containing challenge.yml
         id: find-challenge-dirs
         run: |
