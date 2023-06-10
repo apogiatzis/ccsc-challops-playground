@@ -64,7 +64,7 @@ jobs:
           IFS=' ' read -r -a changed_files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
           for dir in $dirs; do
             for file in "${changed_files[@]}"; do
-              if [[ "$file" == "$dir"* ]]; then
+              if [[ "./$file" == "$dir"* ]]; then
                 changed_dirs+=("$dir")
                 break
               fi
