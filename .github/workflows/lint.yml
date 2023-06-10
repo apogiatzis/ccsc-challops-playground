@@ -8,12 +8,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Find directories containing challenge.yml
         id: find-challenge-dirs
         run: |
           dirs=$(find . -name 'challenge.yml' -printf '%h\n' | sort -u)
-          dirs="${dirs//$'\n'/,}" >> "$GITHUB_OUTPUT"
+          echo dirs="${dirs//$'\n'/,}" >> "$GITHUB_OUTPUT"
 
       - name: Show output
         run: echo "${{ steps.find-challenge-dirs.outputs.dirs }}"
