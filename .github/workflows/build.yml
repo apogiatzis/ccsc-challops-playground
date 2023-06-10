@@ -33,6 +33,12 @@ jobs:
 
       - name: Docker challenges list
         run: echo "${{ steps.docker-chall-discovery.outputs.dirs }}"
+      
+      - uses: actions/cache@v3
+        id: challenges-hashes-cache
+        with:
+          path: .cache/last_hashes
+          key: last-hashes
 
       - name: Create folder challenge hashes
         id: challenge-hashes
@@ -52,12 +58,7 @@ jobs:
           done
           sort .cache/hashes -o .cache/hashes
           cat .cache/hashes
-
-      - uses: actions/cache@v3
-        id: challenges-hashes-cache
-        with:
-          path: .cache/last_hashes
-          key: last-hashes
+          cat .cache/last_hashes
       
       - name: Find modified challenges
         if: steps.challenges-hashes-cache.outputs.cache-hit != 'true'
