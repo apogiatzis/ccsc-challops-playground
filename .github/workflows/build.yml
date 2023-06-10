@@ -2,6 +2,9 @@ name: Build ans Push Challenges
 
 on: [workflow_call]  # allow this workflow to be called from other workflows
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   run:
     runs-on: ubuntu-latest
