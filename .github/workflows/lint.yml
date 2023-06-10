@@ -14,18 +14,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install git+https://github.com/apogiatzis/ctfcli
 
-      - name: Find directories containing challenge.yml
-        id: find-challenge-dirs
-        run: |
-          dirs=$(find . -name 'challenge.yml' -printf '%h\n' | sort -u)
-          echo dirs="${dirs//$'\n'/ }" >> "$GITHUB_OUTPUT"
+      - id: challenge-discovery
+        uses: ./.github/actions/discover-challenges
+        with:
+          base-dir: '.'
 
       - name: Show output
-        run: echo "${{ steps.find-challenge-dirs.outputs.dirs }}"
+        run: echo "${{ steps.challenge-discovery.outputs.dirs }}"
 
       - name: Lint challenges
         run: |
-          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.find-challenge-dirs.outputs.dirs }}"
+          IFS=' ' read -r -a challenge_dirs <<< "${{ steps.challenge-discovery.outputs.dirs }}"
           for challenge_dir in "${challenge_dirs[@]}"; do
-            echo $challenge_dir
+            ctf challenge lint $challenge_dir
           done
