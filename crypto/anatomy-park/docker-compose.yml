@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.7"
 
 services:
   challenge:
@@ -9,4 +9,7 @@ services:
     build:
       context: ./setup
       dockerfile: Dockerfile
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
 
