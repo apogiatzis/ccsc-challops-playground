@@ -9,7 +9,6 @@ services:
     build:
       context: ./setup
       dockerfile: Dockerfile
-      platforms:
-        - "linux/amd64"
-        - "linux/arm64"
+      labels: 
+        ctf.challenge.name: anatomy-park
 
